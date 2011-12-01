@@ -32,6 +32,7 @@ module Sofa
       # @see Sofa::Mapping::ClassMethods#maps
       def update_with_mapping(attributes = {})
         attributes.each do |key, value|
+          next if value.nil?
           next unless (klass = self.class) and key.respond_to?(:to_sym) and to = klass.mappings[key.to_sym]
 
           block = klass.mappings_procs[to]

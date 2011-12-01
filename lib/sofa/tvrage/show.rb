@@ -54,6 +54,19 @@ module Sofa
           id = show_info.split("\n").first.gsub(%r{^Show ID@}, '').strip
           Show.new(id, options)
         end
+        
+        # Find every show matching the given string using TVRage's search API.
+        # @param name [String] Search string
+        # @return [Array] Array of found Shows
+        # @see http://services.tvrage.com/feeds/search.php?show=house
+        def search name
+          xml = get('http://services.tvrage.com/feeds/search.php', :query => {:show => name})
+          xml["Results"]["show"].collect do |show|
+            s = Show.new(false)
+            s.update_with_mapping show
+            s
+          end
+        end
 
         # Finds all current shows using TVRage's current shows API.
         # 

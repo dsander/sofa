@@ -182,5 +182,18 @@ module Sofa::TVRage
         end
       end
     end
+
+    describe "search" do
+      let(:xml) { File.read('spec/fixtures/tvrage/search2.xml') }
+      before do
+        FakeWeb.register_uri(:get, "http://services.tvrage.com/feeds/search.php?show=house", :body => xml)
+      end
+
+      context "with search string 'house'" do
+        subject { Show.search 'house' }
+        it { should have(20).shows }
+        its(:first) { should be_an_instance_of Show }
+      end
+    end
   end
 end
